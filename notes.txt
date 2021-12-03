@@ -1,0 +1,7 @@
+:set textwidth=100
+Select the lines of text you want to re-format:
+v
+
+Reformat it:
+gq
+

@@ -1,0 +1,111 @@
+<html> <head> <title>notcos</title> <meta charset="utf-8"> <style> body { color: #00ff00;
+background: black; font-size: 14px; line-height: 1.0; } @font-face { font-family:
+'bitstream_vera_sans_monoroman'; src: url('VeraMono-webfont.eot'); src:
+url('VeraMono-webfont.eot?#iefix') format('embedded-opentype'), url('VeraMono-webfont.woff2')
+format('woff2'), url('VeraMono-webfont.woff') format('woff'), url('VeraMono-webfont.ttf')
+format('truetype'), url('VeraMono-webfont.svg#bitstream_vera_sans_monoroman') format('svg');
+font-weight: normal; font-style: normal; }
+
+    a { color: #1589FF; text-decoration: none; } </style> </head> <body> <center><div
+style="display: inline-block; text-align: left;"><pre>
+
+            ______                __      __  __            __  __           __  
+           / ____/________ ______/ /__   / /_/ /_  ___     / / / /___ ______/ /_ 
+          / /   / ___/ __ `/ ___/ //_/  / __/ __ \/ _ \   / /_/ / __ `/ ___/ __ \
+         / /___/ /  / /_/ / /__/ ,&#60;    / /_/ / / /  __/  / __  / /_/ (__  ) / / /
+         \____/_/   \__,_/\___/_/|_|   \__/_/ /_/\___/  /_/ /_/\__,_/____/_/ /_/ 
+
+
+Crack the Hash is a room on TryHackMe.com. You can find it here:
+<a href="https://tryhackme.com/room/crackthehash">https://tryhackme.com/room/crackthehash</a>
+
+The following is a list of hashes. Each hash has an explanation on how to identify it and then how
+to crack it with both john and hashcat.
+
+The hash-identifier tool on Linux is hit or miss. Sometimes it is more accurate than hashid. Most
+of the time the following website is more accurate than either of the previously mentioned tools:
+<a href="https://hashes.com/en/tools/hash_identifier">https://hashes.com/en/tools/hash_identifier</a>
+
+
+MD5 Hash: 48bb6e862e54f2a795ffc4e541caed4d 32 characters long -john hashid 1 john --list=formats |
+grep -i md5 john 1 --wordlist=/usr/share/wordlists/rockyou.txt --format=Raw-MD5 john --show
+--format=Raw-MD5 1 easy
+
+-hashcat hashcat --example-hashes | grep -i -B 1 md5 hashcat 1 -m 0 -a 0 -O
+/usr/share/wordlists/rockyou.txt hashcat 1 --show easy
+
+
+SHA-1 Hash: CBFDAC6008F9CAB4083784CBD1874F76618D2A97 40 characters long -john hashid 2 john
+--list=formats | grep -i sha john 2 --wordlist=/usr/share/wordlists/rockyou.txt --format=Raw-SHA1
+john --show --format=Raw-SHA1 2 password123
+
+-hashcat hashcat --example-hashes | grep -i -B 1 sha1 hashcat 2 -m 100 -a 0 -O
+/usr/share/wordlists/rockyou.txt password123
+
+
+SHA-256 Hash: 1C8BFE8F801D79745C4631D09FFF36C82AA37FC4CCE4FC946683D7B336B63032 64 characters long
+-john hashid 3 john --list=formats | grep -i sha john 3 --wordlist=/usr/share/wordlists/rockyou.txt
+--format=Raw-SHA256 john --show --format=Raw-SHA256 3 letmein
+
+-hashcat hashcat --example-hashes | grep -i -B 1 256 MODE: 1400 TYPE: SHA2-256 hashcat 3 -m 1400 -a
+0 -O /usr/share/wordlists/rockyou.txt letmein
+
+
+bcrypt Hash: $2y$12$Dwt1BZj6pcyc3Dy1FWZ5ieeUznr71EeNkJkUlypTsgbX1H68wsRom 60 characters long -john
+bcrypt takes a long time to crack with rockyou, so I took all of the passwords from rockyou that
+were at most 4 characters long and placed them into a wordist: hashid 4 john --list=formats | grep
+-i bcrypt grep -x '.\{1,4\}' /usr/share/wordlists/rockyou.txt > wordlist john 4
+--wordlist=./wordlist --format=bcrypt john --show --format=bcrypt 4 bleh
+
+-hashcat bycrpt takes a long time to crack with rockyou, so I took all of the passwords from rockyou
+that were at most 4 characters long and placed them into a wordist: hashcat --example-hashes | grep
+-i -B 1 bcrypt hashcat 4 -m 3200 -a 0 -O ./wordlist This was incredibly slow with hashcat on my
+laptop, even with the shortened wordlist. Use john instead for bcrypt hashes on laptops.  bleh
+
+
+MD4 Hash: 279412f945939ba78ce0758d3fd83daa 32 characters long -john The hash was hinted at with the
+hash-identifier tool. The hash was positively identified as MD4 by the following website:
+https://hashes.com/en/tools/hash_identifier john --list=formats | grep -i md4 The standard
+rockyou.txt wordlist did not crack the hash. A rule list had to be utilized: john 5 --format=Raw-MD4
+-rules --wordlist=/usr/share/wordlists/rockyou.txt john --show 5 --format=Raw-MD4 Eternity22
+
+-hashcat The hash was hinted at with the hash-identifier tool. The hash was positively identified as
+MD4 by the following website: https://hashes.com/en/tools/hash_identifier hashcat --example-hashes |
+grep -i -B 1 md4 The standard rockyou.txt wordlist did not crack the hash. A rule list had to be
+utilized: hashcat 5 -m 900 -r /usr/share/hashcat/rules/best64.rule /usr/share/wordlists/rockyou.txt
+Eternity22
+
+
+NTLM Hash: -john 1DFECA0C002AE40B8619ECF94819CC1B 32 characters long hashid was not sure what type
+of hash this was. There were too many possibilites. I used the following site to narrow it down:
+https://hashes.com/en/tools/hash_identifier john --list=formats | grep -i ntlm john 7
+--wordlist=/usr/share/wordlists/rockyou.txt --format=NT john --show --format=NT 7 n63umy8lkf4i
+
+-hashcat hashcat --example-hashes | grep -i -B 1 ntlm hashcat 7 -m 1000 -a 0 -O
+/usr/share/wordlists/rockyou.txt hashcat --show 7 n63umy8lkf4i
+
+
+sha512crypt Hash: -john
+$6$aReallyHardSalt$6WKUTqzq.UQQmrm0p/T7MPpMbGNnzXPMAXi4bJMl9be.cfi3/qxIf.hsGpS41BqMhSrHVXgMpdjS6xeKZAs02.
+This example is 105 characters long, although this is variable for this hash type.
+salt:aReallyHardSalt hashid 8 john --list=formats | grep 512 john 8
+--wordlist=/usr/share/wordlists/rockyou.txt --format=sha512crypt --salt=aReallyHardSalt john --show
+--format=sha512crypt 8 waka99
+
+-hashcat hashcat --example-hashes | grep -i -B 1 sha512crypt hashcat 8 -m 1800 -a 0 -O
+/usr/share/wordlists/rockyou.txt hashcat --show 8 waka99
+
+
+HMAC-SHA1 with Salt Hash: -john e5d8870e5bdd26602cab8dbe07a942c8669e56d6 40 characters long
+salt:tryhackme I added the salt to the hash file like so: cat salted9
+e5d8870e5bdd26602cab8dbe07a942c8669e56d6:tryhackme hashid did not correctly identify this hash. The
+following website identified the hash correctly: https://hashes.com/en/tools/hash_identifier The
+hash was identified as the following by the website: HMAC-SHA1 (key = $salt)
+
+-hashcat hashcat --example-hashes | grep -i -B 1 hmac-sha1 hashcat salted9 -m 160 -a 0 -O
+/usr/share/wordlists/rockyou.txt 481616481616
+
+
+contact: imnotcos@gmail.com
+
+</pre></div></center></body></html>
